@@ -4,10 +4,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photography Gallery</title>
+    <meta name="theme-color" content="#141514">
+    <meta name="description" content="A photographic study of isolation, difficult days, and the distance between needing help and asking for it.">
+    <title>This Is a Cry for Help — Photographs</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./script.js" defer></script>
 </head>
 <body>
-    <h1>Photography Gallery</h1>
-    <p>My photography portfolio.</p>
+    <div class="page-shell">
+        <header class="site-header">
+            <a class="wordmark" href="#top" aria-label="This Is a Cry for Help, home">TICFH<span> / </span>PHOTOGRAPHS</a>
+            <nav class="top-nav" aria-label="Main navigation">
+                <button class="nav-button is-active" type="button" data-view="gallery" aria-current="page">Images <span>01</span></button>
+                <button class="nav-button" type="button" data-view="projects">Projects <span>02</span></button>
+                <a class="nav-contact" href="#contact">Contact <span aria-hidden="true">↗</span></a>
+            </nav>
+        </header>
+
+        <main id="top">
+            <section class="intro" aria-labelledby="page-title">
+                <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> An ongoing photographic study</p>
+                <h1 id="page-title">This Is a Cry<br>for Help<span class="title-period">.</span></h1>
+                <div class="intro-bottom">
+                    <p class="artist-statement">Some days, the world gets very small.<br>These are photographs from inside that distance.</p>
+                    <p class="intro-index">[ 2021 — ∞ ]<br>INDEPENDENT WORK</p>
+                </div>
+            </section>
+
+            <section class="gallery-section" aria-labelledby="gallery-heading">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow section-kicker" id="view-kicker">01 / FIELD NOTES</p>
+                        <h2 id="gallery-heading">Selected images</h2>
+                    </div>
+                    <p class="image-count" id="image-count" aria-live="polite">Loading images…</p>
+                </div>
+                <div class="project-list" id="project-list" hidden></div>
+                <div class="photo-grid" id="photo-grid" aria-live="polite"></div>
+                <p class="load-error" id="load-error" role="alert" hidden>Images could not be loaded. Check that the gallery data file is available.</p>
+            </section>
+
+            <section class="closing-note" aria-label="Artist note">
+                <p class="closing-mark" aria-hidden="true">( ... )</p>
+                <p>There is no clean ending here.<br>Only the choice to keep looking.</p>
+                <span class="closing-rule" aria-hidden="true"></span>
+            </section>
+        </main>
+
+        <footer class="site-footer" id="contact">
+            <div>
+                <p class="eyebrow">For notes, questions, or a quiet hello</p>
+                <a class="email-link" href="mailto:hello@example.com">hello@example.com <span aria-hidden="true">↗</span></a>
+            </div>
+            <div class="footer-meta">
+                <span>INDEPENDENT PROJECT</span>
+                <span>© <span id="current-year"></span></span>
+                <a href="#top">BACK TO TOP ↑</a>
+            </div>
+        </footer>
+    </div>
+
+    <dialog class="lightbox" id="lightbox" aria-label="Photograph viewer">
+        <div class="lightbox-inner">
+            <div class="lightbox-topline">
+                <p class="lightbox-count" id="lightbox-count"></p>
+                <button class="icon-button close-button" id="close-lightbox" type="button" aria-label="Close photograph viewer" title="Close (Esc)">×</button>
+            </div>
+            <button class="lightbox-image-button" id="lightbox-image-button" type="button" aria-label="Next photograph">
+                <img id="lightbox-image" src="" alt="">
+            </button>
+            <div class="lightbox-caption-row">
+                <p class="lightbox-caption" id="lightbox-caption"></p>
+                <div class="lightbox-controls">
+                    <button class="icon-button" id="previous-image" type="button" aria-label="Previous photograph" title="Previous (←)">←</button>
+                    <button class="icon-button" id="next-image" type="button" aria-label="Next photograph" title="Next (→)">→</button>
+                </div>
+            </div>
+        </div>
+    </dialog>
 </body>
 </html>
