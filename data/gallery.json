@@ -3,9 +3,9 @@
   "contact": "mailto:replace-me@example.com",
   "collections": [
     {
-      "id": "untitled_01",
-      "title": "untitled_01",
-      "path": "collections/untitled_01.html",
+      "id": "playing_with_the_elements",
+      "title": "playing with the elements",
+      "path": "collections/playing_with_the_elements.html",
       "images": []
     }
   ]
