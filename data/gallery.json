@@ -6,7 +6,63 @@
       "id": "playing_with_the_elements",
       "title": "playing with the elements",
       "path": "collections/playing_with_the_elements.html",
-      "images": []
+      "images": [
+        {
+          "id": "elements_01",
+          "src": "assets/photos/elements_01.JPG",
+          "alt": "a man holding fire",
+          "width": 4896,
+          "height": 2752,
+          "number": "01",
+          "caption": "",
+          "date": "08-08-2024",
+          "location": "indonesia"
+        },
+        {
+          "id": "elements_02",
+          "src": "assets/photos/elements_02.JPG",
+          "alt": "A grainy, red-lit close-up of a person behind horizontal bands",
+          "width": 4896,
+          "height": 2752,
+          "number": "02",
+          "caption": "",
+          "date": "",
+          "location": ""
+        },
+        {
+          "id": "elements_03",
+          "src": "assets/photos/elements_03.JPG",
+          "alt": "White and gold fireworks bursting across a dark night sky",
+          "width": 4896,
+          "height": 2752,
+          "number": "03",
+          "caption": "",
+          "date": "",
+          "location": ""
+        },
+        {
+          "id": "elements_04",
+          "src": "assets/photos/elements_04.JPG",
+          "alt": "Large flames rising against a dark background",
+          "width": 4896,
+          "height": 2752,
+          "number": "04",
+          "caption": "",
+          "date": "",
+          "location": ""
+        },
+        {
+          "id": "elements_05",
+          "src": "assets/photos/elements_05.JPG",
+          "alt": "A flock of birds flying across an orange sky near power lines",
+          "width": 4896,
+          "height": 2752,
+          "number": "05",
+          "caption": "",
+          "date": "",
+          "location": ""
+        }
+      ]
     }
   ]
 }
