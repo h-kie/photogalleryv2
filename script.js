@@ -333,8 +333,14 @@
             galleryData = await response.json();
             if (!Array.isArray(galleryData.collections)) throw new Error('Gallery configuration has no collections array');
             document.querySelectorAll('.site-title').forEach((label) => {
-                label.textContent = galleryData.siteTitle || 'archive';
+                label.textContent = galleryData.siteTitle || 'this is a cry for help';
             });
+            const pageLabel = page === 'collections'
+                ? 'collections'
+                : page === 'collection'
+                    ? galleryData.collections.find((collection) => collection.id === body.dataset.collectionId)?.title || ''
+                    : '';
+            document.title = [pageLabel, galleryData.siteTitle || 'this is a cry for help'].filter(Boolean).join(' / ');
 
             document.querySelectorAll('#contact-link').forEach((link) => {
                 link.href = galleryData.contact || 'mailto:replace-me@example.com';
