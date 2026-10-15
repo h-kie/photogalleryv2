@@ -324,6 +324,25 @@
         window.setTimeout(() => window.location.assign(target.href), reducedMotion ? 0 : 150);
     });
 
+    window.addEventListener('pageshow', (event) => {
+        if (!event.persisted) return;
+        leavingPage = false;
+        body.classList.remove('page-leaving', 'is-loading');
+        body.classList.add('gallery-visible', 'is-ready');
+
+        if (viewer?.open) viewer.close();
+        if (!galleryData) {
+            loadGallery();
+            return;
+        }
+        if (galleryPage && photoGrid && currentPhotos.length && photoGrid.children.length === 0) {
+            renderPhotos(currentPhotos);
+        }
+        if (page === 'collections' && collectionList && collectionList.children.length === 0) {
+            renderCollections();
+        }
+    });
+
     async function loadGallery() {
         const controller = new AbortController();
         const timeout = window.setTimeout(() => controller.abort(), 8000);
