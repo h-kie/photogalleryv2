@@ -168,12 +168,14 @@ button {
     width: 100%;
     overflow: visible;
     background: transparent;
-    cursor: zoom-in;
-    transition: transform 180ms ease;
+    cursor: pointer;
+    transition: transform 220ms ease;
 }
 
 .photo-open:hover {
-    transform: scale(1.012);
+    outline: 1px solid rgba(232, 230, 223, 0.4);
+    outline-offset: 0;
+    transform: scale(1.025);
 }
 
 .photo-open:focus-visible {
@@ -188,11 +190,12 @@ button {
     max-height: 76svh;
     object-fit: contain;
     opacity: 0.94;
-    transition: opacity 140ms ease;
+    transition: opacity 140ms ease, filter 180ms ease;
 }
 
 .photo-open:hover .gallery-image {
     opacity: 1;
+    filter: drop-shadow(0 0 8px rgba(232, 230, 223, 0.12));
 }
 
 .photo-error {
