@@ -1,90 +1,12 @@
 {
-  "photos": [
+  "siteTitle": "archive",
+  "contact": "mailto:replace-me@example.com",
+  "collections": [
     {
-      "id": "waterline",
-      "title": "The water keeps moving",
-      "year": "2024",
-      "src": "./assets/photos/sample-water.jpg",
-      "largeSrc": "./assets/photos/sample-water.jpg",
-      "alt": "Low waves moving toward a dark shoreline under a pale sky",
-      "caption": "SAMPLE IMAGE 01. Replace this file with a photograph of your own.",
-      "width": 1200,
-      "height": 800,
-      "ratio": "3 / 2"
-    },
-    {
-      "id": "night-sky",
-      "title": "Nothing answers back",
-      "year": "2024",
-      "src": "./assets/photos/sample-night-sky.jpg",
-      "largeSrc": "./assets/photos/sample-night-sky.jpg",
-      "alt": "A quiet city street at night, lined with buildings and glowing blue and magenta lights",
-      "caption": "SAMPLE IMAGE 02. Replace this file with a photograph of your own.",
-      "width": 1200,
-      "height": 800,
-      "ratio": "3 / 2"
-    },
-    {
-      "id": "empty-road",
-      "title": "The long way home",
-      "year": "2023",
-      "src": "./assets/photos/sample-empty-road.jpg",
-      "largeSrc": "./assets/photos/sample-empty-road.jpg",
-      "alt": "An empty road disappearing into a quiet, hazy landscape",
-      "caption": "SAMPLE IMAGE 03. Replace this file with a photograph of your own.",
-      "width": 1200,
-      "height": 1800,
-      "ratio": "2 / 3"
-    },
-    {
-      "id": "window-light",
-      "title": "A room with the curtains open",
-      "year": "2023",
-      "src": "./assets/photos/sample-window-light.jpg",
-      "largeSrc": "./assets/photos/sample-window-light.jpg",
-      "alt": "A lone figure stands in shallow water against a vivid sunset",
-      "caption": "SAMPLE IMAGE 04. Replace this file with a photograph of your own.",
-      "width": 1200,
-      "height": 800,
-      "ratio": "3 / 2"
-    },
-    {
-      "id": "tide",
-      "title": "Trying to stay above it",
-      "year": "2022",
-      "src": "./assets/photos/sample-tide.jpg",
-      "largeSrc": "./assets/photos/sample-tide.jpg",
-      "alt": "A breaking wave curling toward the shore under a pale open sky",
-      "caption": "SAMPLE IMAGE 05. Replace this file with a photograph of your own.",
-      "width": 1000,
-      "height": 1498,
-      "ratio": "2 / 3"
-    },
-    {
-      "id": "dawn",
-      "title": "The first light is still light",
-      "year": "2022",
-      "src": "./assets/photos/sample-dawn.jpg",
-      "largeSrc": "./assets/photos/sample-dawn.jpg",
-      "alt": "A distant landscape at first light with a muted open sky",
-      "caption": "SAMPLE IMAGE 06. Replace this file with a photograph of your own.",
-      "width": 1000,
-      "height": 667,
-      "ratio": "3 / 2"
-    }
-  ],
-  "projects": [
-    {
-      "id": "distance",
-      "title": "The distance between rooms",
-      "description": "Small studies of absence, routine, and the spaces we retreat into.",
-      "photoIds": ["night-sky", "empty-road", "window-light"]
-    },
-    {
-      "id": "returning",
-      "title": "A slow return to weather",
-      "description": "Water and changing light, observed without needing to explain them.",
-      "photoIds": ["waterline", "tide", "dawn"]
+      "id": "untitled_01",
+      "title": "untitled_01",
+      "path": "collections/untitled_01.html",
+      "images": []
     }
   ]
 }

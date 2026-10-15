@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#080808">
+    <title>archive</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./script.js" data-site-root="./" defer></script>
+</head>
+<body data-page="home">
+    <div class="loading-screen" aria-hidden="true"><span></span></div>
+    <header class="archive-header">
+        <a class="site-mark" href="./home.html"><span class="site-title">archive</span> <span>01</span></a>
+        <nav class="site-nav" aria-label="Main navigation">
+            <a href="./collections.html">collections</a>
+            <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="false">sound: off</button>
+        </nav>
+    </header>
+    <main class="archive-main gallery-main">
+        <h1 class="visually-hidden">Photographic archive</h1>
+        <div class="photo-grid" id="photo-grid" aria-label="Photographs"></div>
+        <p class="gallery-status" id="gallery-status" role="status" hidden></p>
+    </main>
+    <footer class="archive-footer">
+        <a id="contact-link" href="mailto:replace-me@example.com">contact</a>
+    </footer>
+    <dialog class="image-viewer" id="image-viewer" aria-label="Photograph viewer">
+        <div class="viewer-shell">
+            <div class="viewer-topline">
+                <p class="viewer-count" id="viewer-count"></p>
+                <button class="viewer-button viewer-close" id="viewer-close" type="button" aria-label="Close photograph viewer">close</button>
+            </div>
+            <div class="viewer-stage">
+                <img class="viewer-image" id="viewer-image" alt="">
+            </div>
+            <div class="viewer-bottomline">
+                <div class="viewer-details" id="viewer-details"></div>
+                <div class="viewer-controls">
+                    <span class="viewer-end" id="viewer-end" hidden>end of collection</span>
+                    <button class="viewer-button" id="viewer-previous" type="button" aria-label="Previous photograph">←</button>
+                    <button class="viewer-button" id="viewer-next" type="button" aria-label="Next photograph">→</button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+</body>
+</html>

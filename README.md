@@ -2,44 +2,72 @@
 
 A small, static photography gallery about isolation, difficult days, and the distance between needing help and asking for it. It uses plain HTML, CSS, vanilla JavaScript, and a JSON manifest; there is no build step or framework.
 
-## Files
+**Live gallery:** [h-kie.github.io/thisisacryforhelp](https://h-kie.github.io/thisisacryforhelp/)
 
-- `index.html` is the page structure.
-- `styles.css` contains the responsive layout and visual styling.
-- `script.js` renders the gallery, projects, and accessible photograph viewer.
-- `data/gallery.json` contains photograph and curated-project metadata.
-- `assets/photos/` contains the locally stored sample images.
+## Pages and files
 
-## Replace the sample images
+- `index.html` is the nearly empty entry page.
+- `home.html` is the photograph gallery.
+- `collections.html` lists collection names.
+- `collections/untitled_01.html` is the first direct collection page.
+- `data/gallery.json` defines the site identifier, contact destination, collections, and ordered photographs.
+- `script.js` contains the shared gallery, loading, sound, navigation, and viewer behavior.
+- `styles.css` contains the responsive archive styling.
+- `assets/photos/` still contains the six original `sample-*.jpg` files. They are retained, but are not shown in the archive.
 
-The six files in `assets/photos/` are labelled samples. Replace them with your own photographs, keeping the same filenames, or change the `src` and `largeSrc` values in `data/gallery.json`. Keep those paths relative, for example `./assets/photos/my-photo.jpg`.
+The six JPEGs are Unsplash samples, not photographs from the site owner, so the live configuration starts with an intentionally empty collection. Add your own photographs before expecting images on the gallery pages.
 
-Each photo entry supports `id`, `title`, `year`, `src`, `largeSrc`, `alt`, `caption`, `width`, `height`, and `ratio`. Use unique IDs, accurate alt text, and the image's actual pixel dimensions. To add a curated project, add an object to `projects` and list matching photo IDs in `photoIds`. Captions are optional; when omitted, the lightbox uses the title.
+## Add photographs
 
-The sample JPEGs were downloaded from Unsplash and are provided as replaceable placeholders. Their filenames are explicitly marked `sample-`.
+Copy image files into `assets/photos/` (or a subfolder there), then add entries to the collection's `images` array in `data/gallery.json`. Paths are relative to the repository root, without a leading slash. Use exact filename casing and simple names such as `photo-01.jpg`.
 
-Replace `hello@example.com` in `index.html` with the address you want visitors to contact.
+```json
+{
+	"id": "photo-01",
+	"src": "assets/photos/photo-01.jpg",
+	"alt": "Describe the visible photograph",
+	"width": 1600,
+	"height": 1100,
+	"layout": "wide",
+	"number": "01",
+	"caption": "Optional caption",
+	"date": "2024",
+	"location": "Optional location"
+}
+```
 
-## Run locally
+The array order is the display order. `alt`, `width`, and `height` should match the image; `caption`, `date`, `location`, and `number` are optional. Use `layout: "wide"` for an occasional two-column image. The default `src` is used in the viewer too. If you later make a smaller gallery copy and a full-size original, set `src` to the smaller file and add `largeSrc` for the original, for example `photo-01-small.jpg` and `photo-01.jpg`. No image-processing step is required.
 
-From the repository directory, start any static HTTP server. For example, with Python 3:
+If a file is missing, its space remains in the layout with a `file not found` message, and the full resolved path is logged to the browser console.
+
+## Add a collection
+
+Add a collection object to `collections` in `data/gallery.json`, with a unique `id`, visible `title`, root-relative `path`, and ordered `images` array. Copy `collections/untitled_01.html` to a new file at that path, then change its `data-collection-id` to the matching ID. Keep the nested page's `data-site-root="../"` and `data-landing="../index.html"`. The collection index is rendered from the JSON, so its name and link appear automatically. A photograph may be listed in more than one collection.
+
+## Contact and entry behavior
+
+Replace `mailto:replace-me@example.com` in `data/gallery.json` with your email destination or another link. The contact link appears at the bottom of the homepage, collection index, and collection pages; the landing page remains empty.
+
+Clicking `start` records entry in the current browser tab using `sessionStorage` and opens `home.html`. A collection page opened directly in a fresh tab redirects to `index.html`; after entering through `start`, normal collection navigation works. The marker is per-tab, and the image viewer is never restored after a page refresh. Ordinary page links use normal browser navigation, so back and forward continue to work.
+
+Sound starts off and is generated locally by the browser only after the visitor enables it. Its setting is kept only for the current tab session. No audio or other external service is used.
+
+## Preview locally
+
+From the repository directory, run:
 
 ```sh
 python3 -m http.server 8000
 ```
 
-Then open <http://localhost:8000>. Serving over HTTP also allows the browser to fetch the JSON manifest; opening `index.html` directly as a `file://` URL may block that request.
+Open <http://localhost:8000/> in a browser, then click `start`. Use an HTTP server rather than opening the HTML file directly so the browser can fetch `data/gallery.json`.
 
 ## Publish with GitHub Pages
 
-1. Commit and push the site files to your GitHub repository.
-2. In the repository on GitHub, open **Settings → Pages**.
-3. Under **Build and deployment**, choose **Deploy from a branch**.
-4. Choose the branch containing the site (commonly `main`) and the repository root (`/`), then save.
-5. Wait for the Pages deployment to finish. The site will appear at the URL GitHub shows on that settings page.
+Commit and push the files to the existing `main` branch. In the repository's **Settings → Pages**, keep **Deploy from a branch** selected, choose `main` and the repository root (`/`), and save. Wait for the Pages deployment to finish. The URLs and image paths are built relative to the project directory, so the pages also work at `https://h-kie.github.io/thisisacryforhelp/`.
 
-All site resources use relative paths. The manifest's `src` and `largeSrc` values resolve from the page URL, so this also works at a project URL such as `https://username.github.io/repository-name/`.
+The current repository's six sample image URLs were checked locally and on the live site. The first four loaded successfully; the last two were still deferred by the browser's lazy-loading behavior when inspected, so no broken source path could be reproduced. The redesign adds explicit failure cards and root-aware paths for nested pages.
 
 ## Accessibility and performance
 
-The image viewer uses a native dialog, labelled controls, Escape to close, and arrow keys to move between images. Gallery images below the first row are lazy-loaded. The page includes visible focus styles, descriptive alt text, responsive image sizing, and reduced-motion support.
+Photographs use descriptive alt text and keyboard-operable buttons. The viewer supports Escape, arrow keys, focus return, edge stopping, and touch swipes. It does not add a history entry. Only the first three photographs are waited on during the short loading sequence; later images are lazy-loaded. Motion respects `prefers-reduced-motion`, and sound is optional and off by default.
