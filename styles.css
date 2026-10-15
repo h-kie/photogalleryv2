@@ -103,7 +103,7 @@ button {
     font-size: 10px;
 }
 
-.site-mark > span:last-child {
+.site-mark .page-label {
     margin-left: 4px;
     color: var(--quiet);
 }

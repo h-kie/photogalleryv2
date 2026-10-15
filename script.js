@@ -339,7 +339,10 @@
                 ? 'collections'
                 : page === 'collection'
                     ? galleryData.collections.find((collection) => collection.id === body.dataset.collectionId)?.title || ''
-                    : '';
+                    : page === 'home' ? 'home' : '';
+            document.querySelectorAll('.page-label').forEach((label) => {
+                if (pageLabel) label.textContent = pageLabel;
+            });
             document.title = [pageLabel, galleryData.siteTitle || 'this is a cry for help'].filter(Boolean).join(' / ');
 
             document.querySelectorAll('#contact-link').forEach((link) => {
