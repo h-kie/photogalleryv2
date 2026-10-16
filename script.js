@@ -40,6 +40,7 @@
     let touchOrigin;
 
     const photoGrid = document.querySelector('#photo-grid');
+    const loadingBar = document.querySelector('.loading-screen span');
     const galleryStatus = document.querySelector('#gallery-status');
     const collectionList = document.querySelector('#collection-list');
     const viewer = document.querySelector('#image-viewer');
@@ -55,8 +56,16 @@
     }
 
     function finishLoading() {
+        updateLoadingProgress(1, 1);
         body.classList.add('gallery-visible', 'is-ready');
         window.setTimeout(() => body.classList.remove('is-loading'), reducedMotion ? 0 : 260);
+    }
+
+    function updateLoadingProgress(loaded, total) {
+        const progress = total ? Math.min(loaded / total, 1) : 1;
+        if (!loadingBar) return;
+        loadingBar.style.setProperty('--loading-progress', progress);
+        loadingBar.setAttribute('aria-valuenow', String(Math.round(progress * 100)));
     }
 
     function setStatus(message, isError = false) {
@@ -66,16 +75,26 @@
         if (isError) galleryStatus.setAttribute('role', 'alert');
     }
 
-    function watchImage(image, timeout = 7000) {
+    function watchImage(image, onFailure, source) {
         return new Promise((resolve) => {
-            let timer;
-            const done = () => {
-                window.clearTimeout(timer);
+            let settled = false;
+            const done = async (loaded) => {
+                if (settled) return;
+                settled = true;
+                if (loaded && typeof image.decode === 'function') {
+                    try {
+                        await image.decode();
+                    } catch {
+                        loaded = false;
+                    }
+                }
+                if (!loaded) onFailure();
                 resolve();
             };
-            image.addEventListener('load', done, { once: true });
-            image.addEventListener('error', done, { once: true });
-            timer = window.setTimeout(done, timeout);
+            image.addEventListener('load', () => done(true), { once: true });
+            image.addEventListener('error', () => done(false), { once: true });
+            image.src = source;
+            if (image.complete) done(image.naturalWidth > 0);
         });
     }
 
@@ -94,7 +113,7 @@
         image.className = 'gallery-image';
         image.alt = photo.alt || '';
         image.decoding = 'async';
-        image.loading = index < 3 ? 'eager' : 'lazy';
+        image.loading = 'eager';
         if (index === 0) image.fetchPriority = 'high';
         if (Number.isFinite(photo.width) && photo.width > 0) image.width = photo.width;
         if (Number.isFinite(photo.height) && photo.height > 0) image.height = photo.height;
@@ -102,10 +121,9 @@
             button.style.setProperty('--photo-ratio', `${image.width} / ${image.height}`);
         }
 
-        let settled = Promise.resolve();
-        if (index < 3) settled = watchImage(image);
         const imageUrl = siteUrl(photo.src);
-        image.addEventListener('error', () => {
+        const showImageError = () => {
+            if (button.classList.contains('is-missing')) return;
             button.classList.add('is-missing');
             image.hidden = true;
             const error = document.createElement('span');
@@ -118,8 +136,9 @@
             error.append(identifier, message);
             button.append(error);
             console.error('Gallery image failed to load:', imageUrl.href);
-        }, { once: true });
-        image.src = imageUrl.href;
+        };
+        image.addEventListener('error', showImageError, { once: true });
+        const settled = watchImage(image, showImageError, imageUrl.href);
 
         button.append(image);
         button.addEventListener('click', () => openViewer(index, button));
@@ -130,6 +149,7 @@
     function renderPhotos(photos) {
         currentPhotos = photos;
         if (!photoGrid) return Promise.resolve();
+        updateLoadingProgress(0, photos.length);
         const cards = photos.map(createPhotoCard);
         photoGrid.replaceChildren(...cards.map((card) => card.article));
 
@@ -138,7 +158,11 @@
             return Promise.resolve();
         }
         if (galleryStatus) galleryStatus.hidden = true;
-        return Promise.all(cards.slice(0, 3).map((card) => card.settled));
+        let loaded = 0;
+        return Promise.all(cards.map((card) => card.settled.then(() => {
+            loaded += 1;
+            updateLoadingProgress(loaded, cards.length);
+        })));
     }
 
     function renderCollections() {
