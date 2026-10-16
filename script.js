@@ -3,6 +3,9 @@
     const siteRoot = new URL(scriptElement?.dataset.siteRoot || './', document.baseURI);
     const page = document.body.dataset.page;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const loadingStartedAt = performance.now();
+    const minimumLoadingDuration = 2000;
+    const loadingFadeDuration = reducedMotion ? 0 : 1000;
     const storageKey = 'archive-entered-this-tab';
 
     if (page === 'collection') {
@@ -40,7 +43,7 @@
     let touchOrigin;
 
     const photoGrid = document.querySelector('#photo-grid');
-    const loadingBar = document.querySelector('.loading-screen span');
+    const loadingBar = document.querySelector('.loading-bar');
     const galleryStatus = document.querySelector('#gallery-status');
     const collectionList = document.querySelector('#collection-list');
     const viewer = document.querySelector('#image-viewer');
@@ -55,10 +58,14 @@
         return new URL(path, siteRoot);
     }
 
-    function finishLoading() {
+    async function finishLoading() {
+        const remaining = Math.max(0, minimumLoadingDuration - (performance.now() - loadingStartedAt));
+        if (remaining > 0) {
+            await new Promise((resolve) => window.setTimeout(resolve, remaining));
+        }
         updateLoadingProgress(1, 1);
         body.classList.add('gallery-visible', 'is-ready');
-        window.setTimeout(() => body.classList.remove('is-loading'), reducedMotion ? 0 : 260);
+        window.setTimeout(() => body.classList.remove('is-loading'), loadingFadeDuration);
     }
 
     function updateLoadingProgress(loaded, total) {
@@ -78,18 +85,11 @@
     function watchImage(image, onFailure, source) {
         return new Promise((resolve) => {
             let settled = false;
-            const done = async (loaded) => {
+            const done = (loaded) => {
                 if (settled) return;
                 settled = true;
-                if (loaded && typeof image.decode === 'function') {
-                    try {
-                        await image.decode();
-                    } catch {
-                        loaded = false;
-                    }
-                }
                 if (!loaded) onFailure();
-                resolve();
+                window.setTimeout(resolve, 50);
             };
             image.addEventListener('load', () => done(true), { once: true });
             image.addEventListener('error', () => done(false), { once: true });
@@ -112,7 +112,7 @@
         const image = document.createElement('img');
         image.className = 'gallery-image';
         image.alt = photo.alt || '';
-        image.decoding = 'async';
+        image.decoding = 'sync';
         image.loading = 'eager';
         if (index === 0) image.fetchPriority = 'high';
         if (Number.isFinite(photo.width) && photo.width > 0) image.width = photo.width;
@@ -509,7 +509,7 @@
             setStatus('configuration unavailable', true);
         } finally {
             window.clearTimeout(timeout);
-            finishLoading();
+            await finishLoading();
         }
     }
 

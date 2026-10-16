@@ -44,14 +44,16 @@ a {
 }
 
 a:not(.start-link),
-.sound-toggle {
+.sound-toggle,
+.viewer-close {
     position: relative;
     text-shadow: 0 0 0 rgba(232, 230, 223, 0);
     transition: text-shadow 260ms ease;
 }
 
 a:not(.start-link)::after,
-.sound-toggle::after {
+.sound-toggle::after,
+.viewer-close::after {
     position: absolute;
     right: 0;
     bottom: 0;
@@ -67,14 +69,18 @@ a:not(.start-link)::after,
 a:not(.start-link):hover,
 a:not(.start-link):focus-visible,
 .sound-toggle:hover,
-.sound-toggle:focus-visible {
+.sound-toggle:focus-visible,
+.viewer-close:hover,
+.viewer-close:focus-visible {
     text-shadow: 0 0 7px rgba(232, 230, 223, 0.95), 0 0 20px rgba(232, 230, 223, 0.6), 0 0 34px rgba(232, 230, 223, 0.25);
 }
 
 a:not(.start-link):hover::after,
 a:not(.start-link):focus-visible::after,
 .sound-toggle:hover::after,
-.sound-toggle:focus-visible::after {
+.sound-toggle:focus-visible::after,
+.viewer-close:hover::after,
+.viewer-close:focus-visible::after {
     transform: scaleX(1);
 }
 
@@ -482,6 +488,11 @@ button {
     text-align: right;
 }
 
+.viewer-close::after {
+    left: auto;
+    width: 5ch;
+}
+
 .viewer-button:disabled {
     color: #41423f;
     cursor: default;
@@ -510,12 +521,27 @@ button {
 .is-ready .loading-screen {
     opacity: 0;
     pointer-events: none;
-    transition: opacity 220ms ease;
+    transition: opacity 1000ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .loading-screen span {
     display: block;
-    width: min(240px, calc(100vw - 64px));
+}
+
+.loading-indicator {
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+}
+
+.loading-label {
+    color: var(--muted);
+    font-size: 9px;
+}
+
+.loading-bar {
+    display: block;
+    width: 50vw;
     height: 1px;
     background: var(--cream);
     transform: scaleX(var(--loading-progress, 0));
