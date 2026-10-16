@@ -257,7 +257,7 @@
         }
     }
 
-    function closeViewer() {
+    async function closeViewer() {
         if (!viewer?.open || viewerClosing) return;
         if (reducedMotion || !viewerImage?.animate) {
             viewer.close();
@@ -265,6 +265,16 @@
         }
 
         viewerClosing = true;
+        if (viewer.classList.contains('info-open')) {
+            viewer.classList.remove('info-open');
+            viewerInfoButton?.setAttribute('aria-pressed', 'false');
+            await new Promise((resolve) => window.requestAnimationFrame(resolve));
+            const stage = viewer.querySelector('.viewer-stage');
+            const layoutTransitions = stage.getAnimations({ subtree: true });
+            await Promise.all(layoutTransitions.map((animation) => animation.finished.catch(() => {})));
+            if (!viewer.open || !viewerClosing) return;
+        }
+
         viewer.classList.add('is-closing');
 
         if (viewerOpenAnimation) {
@@ -355,6 +365,7 @@
 
     document.querySelector('#viewer-close')?.addEventListener('click', closeViewer);
     viewerInfoButton?.addEventListener('click', () => {
+        if (viewerClosing) return;
         const infoOpen = viewer.classList.toggle('info-open');
         viewerInfoButton.setAttribute('aria-pressed', String(infoOpen));
     });
