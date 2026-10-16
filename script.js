@@ -327,6 +327,7 @@
     window.addEventListener('pageshow', (event) => {
         if (!event.persisted) return;
         leavingPage = false;
+        document.querySelectorAll('.start-link.is-leaving').forEach((link) => link.classList.remove('is-leaving'));
         body.classList.remove('page-leaving', 'is-loading');
         body.classList.add('gallery-visible', 'is-ready');
 
