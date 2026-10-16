@@ -40,6 +40,7 @@
     let lastTrigger;
     let viewerOpenAnimation;
     let viewerClosing = false;
+    let viewerSource;
     let touchOrigin;
 
     const photoGrid = document.querySelector('#photo-grid');
@@ -51,6 +52,7 @@
     const viewerCount = document.querySelector('#viewer-count');
     const viewerDetails = document.querySelector('#viewer-details');
     const viewerEnd = document.querySelector('#viewer-end');
+    const viewerInfoButton = document.querySelector('#viewer-info');
     const previousButton = document.querySelector('#viewer-previous');
     const nextButton = document.querySelector('#viewer-next');
 
@@ -327,6 +329,10 @@
         const thumbnail = trigger.querySelector('.gallery-image');
         const sourceRect = thumbnail?.getBoundingClientRect();
         lastTrigger = trigger;
+        viewerSource = trigger;
+        viewerSource.classList.add('is-viewer-source');
+        viewer.classList.remove('info-open');
+        viewerInfoButton?.setAttribute('aria-pressed', 'false');
         updateViewer(index, true);
         viewer.showModal();
         animateViewerFromThumbnail(sourceRect);
@@ -340,18 +346,29 @@
         if (nextIndex < 0 || nextIndex >= currentPhotos.length) return;
         viewerOpenAnimation?.cancel();
         viewerOpenAnimation = undefined;
+        viewerSource?.classList.remove('is-viewer-source');
+        viewerSource = photoGrid?.children[nextIndex]?.querySelector('.photo-open');
+        viewerSource?.classList.add('is-viewer-source');
         updateViewer(nextIndex);
         playTick();
     }
 
     document.querySelector('#viewer-close')?.addEventListener('click', closeViewer);
+    viewerInfoButton?.addEventListener('click', () => {
+        const infoOpen = viewer.classList.toggle('info-open');
+        viewerInfoButton.setAttribute('aria-pressed', String(infoOpen));
+    });
     previousButton?.addEventListener('click', () => moveViewer(-1));
     nextButton?.addEventListener('click', () => moveViewer(1));
     viewer?.addEventListener('close', () => {
         viewerOpenAnimation?.cancel();
         viewerOpenAnimation = undefined;
         viewerClosing = false;
+        viewerSource?.classList.remove('is-viewer-source');
+        viewerSource = undefined;
         viewer.classList.remove('is-closing');
+        viewer.classList.remove('info-open');
+        viewerInfoButton?.setAttribute('aria-pressed', 'false');
         viewerImage.removeAttribute('src');
         viewerImage.classList.remove('is-changing', 'is-missing');
         if (lastTrigger?.isConnected) lastTrigger.focus();
