@@ -35,6 +35,8 @@
     let currentPhotos = [];
     let activeIndex = 0;
     let lastTrigger;
+    let viewerOpenAnimation;
+    let viewerClosing = false;
     let touchOrigin;
 
     const photoGrid = document.querySelector('#photo-grid');
@@ -194,6 +196,80 @@
         }
     }
 
+    function animateViewerFromThumbnail(sourceRect) {
+        if (reducedMotion || !sourceRect || !viewerImage?.animate) return;
+
+        const animate = () => {
+            if (!viewer.open || !viewerImage.naturalWidth) return;
+            const targetRect = viewerImage.getBoundingClientRect();
+            if (!targetRect.width || !targetRect.height) return;
+
+            viewerOpenAnimation?.cancel();
+            viewerOpenAnimation = viewerImage.animate([
+                {
+                    transformOrigin: 'top left',
+                    transform: `translate(${sourceRect.left - targetRect.left}px, ${sourceRect.top - targetRect.top}px) scale(${sourceRect.width / targetRect.width}, ${sourceRect.height / targetRect.height})`,
+                },
+                {
+                    transformOrigin: 'top left',
+                    transform: 'translate(0, 0) scale(1, 1)',
+                },
+            ], {
+                duration: 700,
+                easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
+                fill: 'both',
+            });
+        };
+
+        if (viewerImage.complete && viewerImage.naturalWidth > 0) {
+            animate();
+        } else {
+            viewerImage.classList.add('is-changing');
+            viewerImage.addEventListener('load', animate, { once: true });
+        }
+    }
+
+    function closeViewer() {
+        if (!viewer?.open || viewerClosing) return;
+        if (reducedMotion || !viewerImage?.animate) {
+            viewer.close();
+            return;
+        }
+
+        viewerClosing = true;
+        viewer.classList.add('is-closing');
+
+        if (viewerOpenAnimation) {
+            viewerOpenAnimation.reverse();
+        } else {
+            const thumbnail = photoGrid?.children[activeIndex]?.querySelector('.gallery-image');
+            const sourceRect = thumbnail?.getBoundingClientRect();
+            const imageRect = viewerImage.getBoundingClientRect();
+            if (!sourceRect?.width || !sourceRect.height || !imageRect.width || !imageRect.height || !viewerImage.naturalWidth) {
+                viewer.close();
+                return;
+            }
+
+            viewerOpenAnimation = viewerImage.animate([
+                { transformOrigin: 'top left', transform: 'translate(0, 0) scale(1, 1)' },
+                {
+                    transformOrigin: 'top left',
+                    transform: `translate(${sourceRect.left - imageRect.left}px, ${sourceRect.top - imageRect.top}px) scale(${sourceRect.width / imageRect.width}, ${sourceRect.height / imageRect.height})`,
+                },
+            ], {
+                duration: 700,
+                easing: 'cubic-bezier(0.64, 0, 0.78, 0.39)',
+                fill: 'both',
+            });
+        }
+
+        viewerOpenAnimation.finished
+            .then(() => {
+                if (viewer.open && viewerClosing) viewer.close();
+            })
+            .catch(() => {});
+    }
+
     function playTick() {
         if (!soundEnabled) return;
         try {
@@ -222,35 +298,49 @@
 
     function openViewer(index, trigger) {
         if (!viewer || !currentPhotos[index]) return;
+        const thumbnail = trigger.querySelector('.gallery-image');
+        const sourceRect = thumbnail?.getBoundingClientRect();
         lastTrigger = trigger;
         updateViewer(index, true);
         viewer.showModal();
+        animateViewerFromThumbnail(sourceRect);
         document.querySelector('#viewer-close')?.focus();
         playTick();
     }
 
     function moveViewer(direction) {
+        if (viewerClosing) return;
         const nextIndex = activeIndex + direction;
         if (nextIndex < 0 || nextIndex >= currentPhotos.length) return;
+        viewerOpenAnimation?.cancel();
+        viewerOpenAnimation = undefined;
         updateViewer(nextIndex);
         playTick();
     }
 
-    document.querySelector('#viewer-close')?.addEventListener('click', () => viewer.close());
+    document.querySelector('#viewer-close')?.addEventListener('click', closeViewer);
     previousButton?.addEventListener('click', () => moveViewer(-1));
     nextButton?.addEventListener('click', () => moveViewer(1));
     viewer?.addEventListener('close', () => {
+        viewerOpenAnimation?.cancel();
+        viewerOpenAnimation = undefined;
+        viewerClosing = false;
+        viewer.classList.remove('is-closing');
         viewerImage.removeAttribute('src');
         viewerImage.classList.remove('is-changing', 'is-missing');
         if (lastTrigger?.isConnected) lastTrigger.focus();
     });
     viewer?.addEventListener('click', (event) => {
-        if (event.target === viewer) viewer.close();
+        if (event.target === viewer) closeViewer();
+    });
+    viewer?.addEventListener('cancel', (event) => {
+        event.preventDefault();
+        closeViewer();
     });
     viewer?.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
             event.preventDefault();
-            viewer.close();
+            closeViewer();
             return;
         }
         if (event.key === 'ArrowLeft') {

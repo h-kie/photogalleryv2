@@ -304,6 +304,24 @@ button {
     background: rgba(3, 3, 3, 0.975);
 }
 
+.image-viewer[open]::backdrop {
+    animation: viewer-backdrop-in 700ms ease both;
+}
+
+.image-viewer.is-closing::backdrop {
+    animation: viewer-backdrop-out 700ms ease both;
+}
+
+.image-viewer[open] .viewer-topline,
+.image-viewer[open] .viewer-bottomline {
+    animation: viewer-chrome-in 700ms ease both;
+}
+
+.image-viewer.is-closing .viewer-topline,
+.image-viewer.is-closing .viewer-bottomline {
+    animation: viewer-chrome-out 700ms ease both;
+}
+
 .viewer-shell {
     display: grid;
     width: min(100%, 1500px);
@@ -457,6 +475,26 @@ button {
 @keyframes page-in {
     from { opacity: 0; }
     to { opacity: 1; }
+}
+
+@keyframes viewer-backdrop-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes viewer-chrome-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes viewer-backdrop-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes viewer-chrome-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
 
 @media (max-width: 760px) {
