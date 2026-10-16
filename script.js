@@ -146,8 +146,10 @@
         const items = (galleryData.collections || []).map((collection) => {
             const item = document.createElement('li');
             const link = document.createElement('a');
+            const title = document.createElement('span');
             link.href = siteUrl(collection.path).href;
-            link.textContent = collection.title;
+            title.textContent = collection.title;
+            link.append(title);
             item.append(link);
             return item;
         });

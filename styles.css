@@ -43,6 +43,41 @@ a {
     text-decoration: none;
 }
 
+a:not(.start-link),
+.sound-toggle {
+    position: relative;
+    text-shadow: 0 0 0 rgba(232, 230, 223, 0);
+    transition: text-shadow 260ms ease;
+}
+
+a:not(.start-link)::after,
+.sound-toggle::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    background: currentColor;
+    content: "";
+    pointer-events: none;
+    transform: scaleX(0);
+    transition: transform 280ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+a:not(.start-link):hover,
+a:not(.start-link):focus-visible,
+.sound-toggle:hover,
+.sound-toggle:focus-visible {
+    text-shadow: 0 0 7px rgba(232, 230, 223, 0.95), 0 0 20px rgba(232, 230, 223, 0.6), 0 0 34px rgba(232, 230, 223, 0.25);
+}
+
+a:not(.start-link):hover::after,
+a:not(.start-link):focus-visible::after,
+.sound-toggle:hover::after,
+.sound-toggle:focus-visible::after {
+    transform: scaleX(1);
+}
+
 a:hover,
 button:hover {
     color: var(--cream);
@@ -73,15 +108,35 @@ button {
 }
 
 .start-link {
+    position: relative;
+    display: inline-block;
     padding: 8px 10px;
     color: var(--cream);
     font-size: 11px;
-    transition: opacity 140ms ease, transform 140ms ease;
+    text-shadow: 0 0 0 rgba(232, 230, 223, 0);
+    transition: text-shadow 260ms ease, opacity 140ms ease;
 }
 
-.start-link:hover {
-    opacity: 0.66;
-    transform: translateY(-1px);
+.start-link::after {
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+    left: 10px;
+    height: 1px;
+    background: currentColor;
+    content: "";
+    transform: scaleX(0);
+    transition: transform 280ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.start-link:hover,
+.start-link:focus-visible {
+    text-shadow: 0 0 7px rgba(232, 230, 223, 0.95), 0 0 20px rgba(232, 230, 223, 0.6), 0 0 34px rgba(232, 230, 223, 0.25);
+}
+
+.start-link:hover::after,
+.start-link:focus-visible::after {
+    transform: scaleX(1);
 }
 
 .start-link.is-leaving {
@@ -103,8 +158,13 @@ button {
     font-size: 10px;
 }
 
-.site-mark .page-label {
-    margin-left: 4px;
+.site-identity {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.page-label {
     color: var(--quiet);
 }
 
@@ -246,11 +306,34 @@ button {
     padding: 17px 0;
     color: var(--cream);
     font-size: 12px;
-    transition: opacity 140ms ease;
 }
 
-.collection-list a:hover {
-    opacity: 0.62;
+.collection-list a::after {
+    display: none;
+}
+
+.collection-list a > span {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+}
+
+.collection-list a > span::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    background: currentColor;
+    content: "";
+    pointer-events: none;
+    transform: scaleX(0);
+    transition: transform 280ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.collection-list a:hover > span::after,
+.collection-list a:focus-visible > span::after {
+    transform: scaleX(1);
 }
 
 .collection-id {
